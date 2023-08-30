@@ -1,8 +1,8 @@
 ---
 title: AWS S3とGitHub Actionsを使用した静的ウェブサイトの自動デプロイ
 tags:
-  - "AWS S3" 
   - "GitHub Actions"
+  - "AWS S3"
 private: false
 updated_at: ''
 id: null
