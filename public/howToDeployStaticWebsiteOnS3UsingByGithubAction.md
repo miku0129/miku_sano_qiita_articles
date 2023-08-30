@@ -10,51 +10,62 @@ slide: false
 ---
 # AWS S3とGitHub Actionsを使用した静的ウェブサイトの自動デプロイ
 
-## はじめに:
-これまで静的WebサイトのホスティングとしてVercelを主に使っていましたが、技術の幅を広げるためにAWS S3に挑戦しました。併せてGitHub Actionsを使用することでビルドとデプロイを自動化し開発効率を改善出来たので、自分の忘備録を兼ねて紹介します。
+## はじめに
+これまで、静的ウェブサイトのホスティングには主にVercelを使用していましたが、技術の幅を広げるためにAWS S3に挑戦しました。さらに、GitHub Actionsを導入してビルドとデプロイを自動化し、開発効率の向上を実現しました。この記事では、その手順を自分の備忘録として共有します。
 
-### この記事で紹介すること
-- Reactで生成したウェブサイトを自動デプロイするためのGitHub Actionsの設定
+### この記事で紹介する内容
+- Reactで作成したウェブサイトを自動的にデプロイするためのGitHub Actionsの設定方法
 
-### この記事で紹介しないこと
-- AWS S3バケットのセットアップについて詳細な手順
+### この記事では取り扱わない内容
+- AWS S3バケットのセットアップに関する詳細な手順
 - GitHub Actionsとの連携に必要なアクセスキーの生成と設定の詳細な手順
 
-上記についてはすでに多くの良記事が執筆されているのでそちらを参照ください。私が参考にした記事は[こちら](https://baimamboukar.medium.com/deploy-static-websites-to-aws-s3-via-ci-cd-with-github-actions-faa8c7432a5f)です。
+上記の内容については、既に他の優れた記事が多数存在するため、そちらも参考にしてみてください。私が参考にした記事は[こちら](https://baimamboukar.medium.com/deploy-static-websites-to-aws-s3-via-ci-cd-with-github-actions-faa8c7432a5f)です。
 
+## 前提条件
 
-## 前提条件:
-- AWSアカウントを持っていること
+以下の条件を満たしている必要があります：
+
+- AWSアカウントを保有していること
 - GitHubリポジトリが準備されていること
 
-## 手順:
+## 手順
 
-### Reactアプリを生成する
-```javascript
+### Reactアプリの生成
+
+まず、以下のコマンドでReactアプリを生成します：
+
+```bash
 npx create-react-app my-app
 ```
+
 [create-react-app](https://github.com/facebook/create-react-app)
 
 
 
 ### AWS S3バケットのセットアップ:
-1. AWS Management Consoleにログインし、S3サービスに移動。
-2. 新しいバケットを作成し、ウェブホスティングオプションを有効にする。
-3. Access keyを生成。
-注意: だいぶ端折っています。
+
+以下の手順でAWS S3バケットを設定します：
+
+1. AWS Management Consoleにログインし、S3サービスに移動します。
+2. 新しいバケットを作成し、ウェブホスティングオプションを有効にします。
+3. アクセスキーを生成します。
+
+注意: ここでは手順を簡略化して説明しています。
 
 ### GitHubリポジトリの設定
 mainブランチへのpushをトリガーとして、AWS S3のバケットにビルドされたファイルをデプロイするための設定について説明します。
 
-1. GitHubリポジトリを作成する。
-- リポジトリを作成し、my-appのコードをコミットする。
+以下の手順でGitHubリポジトリを設定します：
 
-2. AWS S3で生成したアクセスキーをGitHub Actionsに設定する。
+1. リポジトリを作成し、my-appのコードをコミットします。
+2. AWS S3で生成したアクセスキーをGitHub Actionsに設定します。
 
-3. GitHub Actionsワークフローを設定する。
-- ファイルの内容は以下コードをコピー＆ペーストする。
+### GitHub Actionsワークフローの設定
 
-```yaml
+以下の内容でGitHub Actionsワークフローを設定します：
+
+```yaml:sample.yaml
 
 name: Build and deploy static website to AWS-S3 on push
 
@@ -84,16 +95,21 @@ jobs:
           aws s3 sync ./build s3://<your-bucket-name> --delete
 ```
 
-3. コードに変更を加えてコミットし、ビルドされたコードがAWS S3のバケットにデプロイされることを確認する。
+コードに変更を加えてコミット&プッシュし、ビルドされたコードがAWS S3のバケットにデプロイされることを確認します。
 
 ### 注意
-- <your-bucket-name>にはあなたが作成したバケット名を入れます。また、"aws-region"の値はあなたがバケットを作成した地域に差し替えてください。
-- secrets.AWS_ACCESS_KEY_ID とsecrets.AWS_SECRET_ACCESS_KEY は、GitHubリポジトリのSecretsに保存されたAWSの認証情報です。
-- GitHub Actionsの設定は他にもあるので[こちら](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)を参照してください。
-個人的に詰まったポイントは、buildされたファイルのみをデプロイするところです。結論として、buildとdeployを１つのsteps内に設定し、AWSへのdeployを ./build 配下で行うようにしたところ解決しました。
 
-## まとめ:
-これで、GitHub Actionsを使用してAWS S3に静的ウェブサイトを自動的にデプロイするCI/CDパイプラインが構築されました。ソースコードの変更がmainブランチへのpushをトリガーとして自動的にリリースされるため、開発効率が向上します。
+- `<your-bucket-name>`には作成したバケット名を入力します。
+- `your-aws-regionには`バケットを作成した地域を指定します。
+- `secrets.AWS_ACCESS_KEY_ID`と`secrets.AWS_SECRET_ACCESS_KEY`は、GitHubリポジトリのSecretsに保存されたAWSの認証情報です。
+- 個人的に詰まったポイントは、buildされたファイルのみをデプロイする箇所です。結論として、buildとdeployを１つのsteps内に設定し、AWSへのdeployを ./build 配下で行うようにしたところ解決しました。
 
-### 引用
+## まとめ
+
+これで、GitHub Actionsを使用してAWS S3に静的ウェブサイトを自動的にデプロイするCI/CDパイプラインが構築されました。mainブランチへの変更がトリガーとなり、自動的にデプロイが行われるため、開発効率の向上が期待できます。
+
+お読みいただきありがとうございました。お気づきのことがあればコメントを頂けると幸いです😊
+
+## 引用
 [Deploy static websites to AWS S3 via CI/CD with GitHub Actions](https://baimamboukar.medium.com/deploy-static-websites-to-aws-s3-via-ci-cd-with-github-actions-faa8c7432a5f)
+[Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
