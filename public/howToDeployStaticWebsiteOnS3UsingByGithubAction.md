@@ -111,5 +111,5 @@ jobs:
 お読みいただきありがとうございました。お気づきのことがあればコメントを頂けると幸いです😊
 
 ## 引用
-[Deploy static websites to AWS S3 via CI/CD with GitHub Actions](https://baimamboukar.medium.com/deploy-static-websites-to-aws-s3-via-ci-cd-with-github-actions-faa8c7432a5f)
-[Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
+- [Deploy static websites to AWS S3 via CI/CD with GitHub Actions](https://baimamboukar.medium.com/deploy-static-websites-to-aws-s3-via-ci-cd-with-github-actions-faa8c7432a5f)
+- [Workflow syntax for GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions)
