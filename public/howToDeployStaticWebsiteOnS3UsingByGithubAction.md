@@ -55,7 +55,6 @@ npx create-react-app my-app
 注意: ここでは手順を簡略化して説明しています。
 
 ### GitHubリポジトリの設定
-mainブランチへのpushをトリガーとして、AWS S3のバケットにビルドされたファイルをデプロイするための設定について説明します。
 
 以下の手順でGitHubリポジトリを設定します：
 
@@ -63,6 +62,13 @@ mainブランチへのpushをトリガーとして、AWS S3のバケットにビ
 2. AWS S3で生成したアクセスキーをGitHub Actionsに設定します。
 
 ### GitHub Actionsワークフローの設定
+
+#### GitHub Actionsとは？
+> GitHub Actions は、ビルド、テスト、デプロイのパイプラインを自動化できる継続的インテグレーションと継続的デリバリー (CI/CD) のプラットフォームです。
+
+引用: [GitHub Actions を理解する](https://docs.github.com/ja/actions/learn-github-actions/understanding-github-actions)
+
+ここではmainブランチへのpushをトリガーとして、AWS S3のバケットにビルドされたファイルをデプロイするための設定をご紹介します。
 
 以下の内容でGitHub Actionsワークフローを設定します：
 
@@ -103,11 +109,13 @@ jobs:
 - `<your-bucket-name>`には作成したバケット名を入力します。
 - `your-aws-regionには`バケットを作成した地域を指定します。
 - `secrets.AWS_ACCESS_KEY_ID`と`secrets.AWS_SECRET_ACCESS_KEY`は、GitHubリポジトリのSecretsに保存されたAWSの認証情報です。
-- 個人的に詰まったポイントは、buildされたファイルのみをデプロイする箇所です。結論として、buildとdeployを１つのsteps内に設定し、AWSへのdeployを ./build 配下で行うようにしたところ解決しました。
+
 
 ## まとめ
 
 これで、GitHub Actionsを使用してAWS S3に静的ウェブサイトを自動的にデプロイするCI/CDパイプラインが構築されました。mainブランチへの変更がトリガーとなり、自動的にデプロイが行われるため、開発効率の向上が期待できます。
+
+個人的に詰まったポイントは、buildされたファイルのみをデプロイする箇所です。結論として、buildとdeployを１つのsteps内に設定し、AWSへのdeployを ./build 配下で行うようにしたところ解決しました。
 
 お読みいただきありがとうございました。お気づきのことがあればコメントを頂けると幸いです😊
 
